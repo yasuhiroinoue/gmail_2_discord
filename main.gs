@@ -12,10 +12,10 @@ function splitIntoChunks(text, chunkSize) {
 }
 
 function hook() {
-  const threads = GmailApp.search('label:unread');  // 未読のスレッドを取得
+  const threads = GmailApp.search('label:unread');  // Get unread threads
 
   if (threads.length == 0) {
-    Logger.log('新規メッセージなし');
+    Logger.log('No new messages');
     return;
   }
 
@@ -24,7 +24,7 @@ function hook() {
     let allPayloads = [];
 
     messages.forEach(function(message) {
-      message.markRead();  // メールを既読に設定する
+      message.markRead();  // Mark email as read
 
       const from = message.getFrom();
       const subject = message.getSubject();
@@ -91,5 +91,5 @@ function getWebhookUrl() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = spreadsheet.getActiveSheet();
 
-  return sheet.getRange(1, 1).getValue();  // セルA1を取得
+  return sheet.getRange(1, 1).getValue();  // Get cell A1
 }
