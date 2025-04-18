@@ -21,7 +21,7 @@ function hook() {
 
   threads.forEach(function(thread) {
     const messages = thread.getMessages();
-    let allPayloads = [];
+    // Removed allPayloads array declaration
 
     messages.forEach(function(message) {
       message.markRead();  // Mark email as read
@@ -63,19 +63,25 @@ function hook() {
             }],
           };
         }
-        
-        allPayloads.push({
-          url: webhook,
-          contentType: 'application/json',
-          payload: JSON.stringify(payload),
-        });
+
+        // Send chunk immediately with a delay
+        try {
+          UrlFetchApp.fetch(webhook, {
+            method: 'post',
+            contentType: 'application/json',
+            payload: JSON.stringify(payload)
+          });
+          // Wait 1 second before sending the next chunk
+          Utilities.sleep(1000); 
+        } catch (e) {
+          Logger.log(`Error sending chunk ${index + 1}: ${e}`);
+        }
       });
       
       message.moveToTrash();
     });
 
-    Logger.log(allPayloads);
-    UrlFetchApp.fetchAll(allPayloads);
+    // Removed UrlFetchApp.fetchAll call
   });
 }
 
